@@ -1,0 +1,24 @@
+.root {
+  display: grid;
+  grid-template-columns: 10vw 1fr 10vw;
+  grid-template-rows: 1fr 20px;
+  grid-template-areas: "toolbox scene properties";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.toolbox {
+  grid-area: toolbox;
+}
+
+.scene {
+  grid-area: scene;
+}
+
+.properties {
+  grid-area: properties;
+}
