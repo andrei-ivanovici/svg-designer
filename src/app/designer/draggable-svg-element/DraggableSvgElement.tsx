@@ -1,9 +1,12 @@
 import React, {useState, useEffect, useContext, useRef, ReactNode,} from "react";
 import {fromEvent} from "rxjs";
-import {switchMap, map, takeUntil, filter, tap, withLatestFrom} from "rxjs/operators";
+import {switchMap, map, takeUntil, filter, withLatestFrom} from "rxjs/operators";
 import {DesignerContext} from "../Designer.context";
 import {ToolboxElementProps} from "../toolbox/elements/toolbox-element.props";
 import {SceneElement} from "../scene/Scene.model";
+import style from "./DraggableSvgElement.module.scss";
+
+const {root} = style;
 
 export interface DraggableSvgElementProps extends ToolboxElementProps {
     render: (size: { height: number, width: number }) => ReactNode
@@ -17,25 +20,28 @@ function useDnd3(gRef: React.MutableRefObject<HTMLElement>, model: SceneElement,
     const [lastPos, setLastPos] = useState(model.position);
 
     useEffect(() => {
-        setX(model.position.x);
-        setY(model.position.y);
-        setLastPos(model.position);
+        const target: HTMLElement = gRef.current;
+        const rect = target.getBoundingClientRect();
+        const parent: HTMLElement = ctx.ref.current;
+        const sceneRect = parent.getBoundingClientRect();
+        const xModel = rect.left - sceneRect.left + model.position.x;
+        const yModel = rect.top - sceneRect.top + model.position.y;
+        console.log(`translation ${xModel} ${yModel} `);
+        // setX(xModel);
+        // setY(yModel);
+
 
     }, [model]);
-
     useEffect(() => {
-        console.log("hook call");
         const target: HTMLElement = gRef.current;
         const parent: HTMLElement = ctx.ref.current;
         if (!target || !parent) {
             return;
         }
 
-        const rect = parent.getBoundingClientRect();
-
         const mouseMove = fromEvent(window, "mousemove");
-        const mouseUp = fromEvent(window, "mouseup").pipe(tap(it => console.log("up")));
-        const mouseDown = fromEvent(target, "mousedown").pipe(tap(it => console.log("down")))
+        const mouseUp = fromEvent(window, "mouseup");
+        const mouseDown = fromEvent(target, "mousedown")
             .pipe(filter((m: MouseEvent) => m.button == 0));
 
         const dragAndDrop = mouseDown.pipe(
@@ -71,15 +77,14 @@ function useDnd3(gRef: React.MutableRefObject<HTMLElement>, model: SceneElement,
 
         const updateSub = mouseUp.pipe(withLatestFrom(dragAndDrop))
             .subscribe(([, pos]) => {
-                console.log("update last pos!");
                 setLastPos({x: pos.x, y: pos.y});
                 const rect = target.getBoundingClientRect();
                 const sceneRect = parent.getBoundingClientRect();
                 onChange({
                     ...model,
                     position: {
-                        x: rect.left - sceneRect.left,
-                        y: rect.top - sceneRect.top
+                        x: Math.round(rect.left - sceneRect.left),
+                        y: Math.round(rect.top - sceneRect.top)
                     }
                 });
             });
@@ -91,13 +96,12 @@ function useDnd3(gRef: React.MutableRefObject<HTMLElement>, model: SceneElement,
             });
 
         return () => {
-            console.log("destroyed");
             updateSub.unsubscribe();
             dndSub.unsubscribe();
         };
 
 
-    }, [lastPos, model]);
+    }, [lastPos, model, onChange]);
 
 
     return {
@@ -111,8 +115,8 @@ export function DraggableSvgElement({render, onChange, model}: DraggableSvgEleme
     const gRef = useRef();
     const {x, y} = useDnd3(gRef, model, onChange);
 
-    return <g ref={gRef} transform={`translate(${x}, ${y})`}>
-        {render({height: 100, width: 100})}
+    return <g ref={gRef} transform={`translate(${x}, ${y})`} className={root}>
+        {render({height: model.dimension.height, width: model.dimension.width})}
     </g>;
 
 }

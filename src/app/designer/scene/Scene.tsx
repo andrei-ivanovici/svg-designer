@@ -1,4 +1,4 @@
-import React, {useState, forwardRef} from 'react';
+import React, {forwardRef} from 'react';
 import {WithCssClass} from "../../WithCssClass";
 import style from "./Scene.module.scss";
 import clsx from "clsx";
@@ -6,7 +6,6 @@ import {SceneModel, SceneElement, ElementType} from "./Scene.model";
 import {Discord} from "../toolbox/elements/discord/Discord";
 import {Plane} from "../toolbox/elements/plane/Plane";
 import {BarCode} from "../toolbox/elements/bar-code/BarCode";
-import {exampleScene} from "./initial.scene";
 
 const elements = {
     [ElementType.discord]: Discord,
@@ -20,38 +19,46 @@ const backgroundStyle = {
     backgroundSize: "auto"
 };
 
-function logPosition(change: SceneElement) {
-    console.log(change.position);
+export interface SceneProps extends WithCssClass {
+    value: SceneModel;
+    onChange: (change: SceneModel) => void;
 }
 
-function useScene() {
-    const [model, setModel] = useState<SceneModel>(exampleScene);
+function useScene(model: SceneModel, onChange: (newModel: SceneModel) => void) {
+
+    console.log("useScene: RENDER");
+    console.log("ELEMENTS", model.elements);
+
+
+    const updateElement = (changedElement: SceneElement) => {
+        const newElements = [...model.elements];
+        const foundElement = newElements.findIndex(e => e.id == changedElement.id);
+
+        if (foundElement !== -1) {
+
+            console.log("Updating array ", newElements);
+            newElements[foundElement] = changedElement;
+            onChange({
+                elements: newElements
+            });
+        }
+    };
+
     return {
         model,
-        updateElement: (element: SceneElement) => {
-            const foundElement = model.elements.findIndex(e => e.id == element.id);
-
-            if (foundElement !== -1) {
-                const newElements = [...model.elements];
-                newElements[foundElement] = element;
-                setModel({
-                    ...model,
-                    elements: newElements
-                });
-            }
-        }
+        updateElement: updateElement
     };
 }
 
-function SceneComponent({className}: WithCssClass, ref) {
-    const {model, updateElement} = useScene();
+function SceneComponent({className, onChange, value}: SceneProps, ref) {
+    const {model, updateElement} = useScene(value, onChange);
 
     const clazz = clsx(root, className);
     return <div className={clazz} ref={ref}>
         <svg xmlns="http://www.w3.org/2000/svg" style={backgroundStyle} viewBox={"0 0 100% 100%"}>
-            {model.elements.map(el => {
+            {model.elements.map((el) => {
                 const ToRender = elements[el.type];
-                return <ToRender onChange={updateElement} model={el} key={el.id}/>;
+                return <ToRender onChange={(change) => updateElement(change)} model={el} key={el.id}/>;
             })}
         </svg>
     </div>;

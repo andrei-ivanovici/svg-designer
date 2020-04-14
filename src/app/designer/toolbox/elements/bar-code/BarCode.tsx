@@ -1,5 +1,5 @@
 import React from 'react';
-import {DraggableSvgElement} from "../../../svg-element/DraggableSvgElement";
+import {DraggableSvgElement} from "../../../draggable-svg-element/DraggableSvgElement";
 import {ToolboxElementProps} from "../toolbox-element.props";
 import BarCodeSvg from "./bar-code.svg";
 

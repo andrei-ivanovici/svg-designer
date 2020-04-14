@@ -1,6 +1,6 @@
 .root {
   display: grid;
-  grid-template-columns: 10vw 1fr 10vw;
+  grid-template-columns: 10vw 1fr 30vw;
   grid-template-rows: 1fr 20px;
   grid-template-areas: "toolbox scene properties";
   position: absolute;
@@ -21,4 +21,8 @@
 
 .properties {
   grid-area: properties;
+  //display: grid;
+  //grid-template-rows: 1fr 4fr;
+  max-height: 100vh;
+  overflow: hidden;
 }
