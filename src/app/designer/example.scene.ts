@@ -43,6 +43,20 @@ export const exampleScene: SceneModel = {
             rotation: 0,
             zIndex: 0,
             type: ElementType.plane
+        },
+        {
+            id: "3",
+            position: {
+                x: 0,
+                y: 555
+            },
+            dimension: {
+                height: 100,
+                width: 100,
+            },
+            rotation: 0,
+            zIndex: 0,
+            type: ElementType.rider
         }
     ]
 };

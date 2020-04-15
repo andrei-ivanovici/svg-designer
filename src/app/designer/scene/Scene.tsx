@@ -6,11 +6,14 @@ import {SceneModel, SceneElement, ElementType} from "./Scene.model";
 import {Discord} from "../toolbox/elements/discord/Discord";
 import {Plane} from "../toolbox/elements/plane/Plane";
 import {BarCode} from "../toolbox/elements/bar-code/BarCode";
+import {Rider} from "../toolbox/elements/rider/Rider";
 
 const elements = {
     [ElementType.discord]: Discord,
     [ElementType.plane]: Plane,
-    [ElementType.barCode]: BarCode
+    [ElementType.barCode]: BarCode,
+    [ElementType.rider]: Rider
+
 };
 
 const {root} = style;

@@ -1,7 +1,8 @@
 export enum ElementType {
     barCode = "barCode",
     plane = "plane",
-    discord = "discord"
+    discord = "discord",
+    rider = "rider"
 }
 
 export interface ElementPosition {
