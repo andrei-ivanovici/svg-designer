@@ -50,16 +50,24 @@ function useScene(model: SceneModel, onChange: (newModel: SceneModel) => void) {
     };
 }
 
+function byIndex(x: SceneElement, y: SceneElement) {
+    if (x.zIndex == y.zIndex) {
+        return 0;
+    }
+    return x.zIndex > y.zIndex ? 1 : -1;
+}
+
 function SceneComponent({className, onChange, value}: SceneProps, ref) {
     const {model, updateElement} = useScene(value, onChange);
 
     const clazz = clsx(root, className);
     return <div className={clazz} ref={ref}>
-        <svg xmlns="http://www.w3.org/2000/svg" style={backgroundStyle} viewBox={"0 0 100% 100%"}>
-            {model.elements.map((el) => {
-                const ToRender = elements[el.type];
-                return <ToRender onChange={(change) => updateElement(change)} model={el} key={el.id}/>;
-            })}
+        <svg xmlns="http://www.w3.org/2000/svg" style={backgroundStyle} preserveAspectRatio="xMinYMin meet">
+            {model.elements.sort(byIndex)
+                .map((el) => {
+                    const ToRender = elements[el.type];
+                    return <ToRender onChange={(change) => updateElement(change)} model={el} key={el.id}/>;
+                })}
         </svg>
     </div>;
 }

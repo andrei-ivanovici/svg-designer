@@ -20,6 +20,7 @@ export interface SceneElement {
     position: ElementPosition;
     dimension: ElementDimension;
     rotation: number;
+    zIndex: number;
 }
 
 export interface SceneModel {

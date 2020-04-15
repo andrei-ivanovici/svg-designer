@@ -5,5 +5,5 @@ import {ToolboxElementProps} from "../toolbox-element.props";
 
 export function Discord(props: ToolboxElementProps) {
     return <DraggableSvgElement  {...props}
-                                 render={size => <DiscordSvg {...size}/>}/>;
+                                 render={size => <DiscordSvg {...size} preserveAspectRatio="xMinYMin meet"/>}/>;
 }

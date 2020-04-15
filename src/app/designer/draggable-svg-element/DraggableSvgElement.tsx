@@ -20,15 +20,16 @@ function useDnd3(gRef: React.MutableRefObject<HTMLElement>, model: SceneElement,
     const [lastPos, setLastPos] = useState(model.position);
 
     useEffect(() => {
-        const target: HTMLElement = gRef.current;
-        const rect = target.getBoundingClientRect();
-        const parent: HTMLElement = ctx.ref.current;
-        const sceneRect = parent.getBoundingClientRect();
-        const xModel = rect.left - sceneRect.left + model.position.x;
-        const yModel = rect.top - sceneRect.top + model.position.y;
-        console.log(`translation ${xModel} ${yModel} `);
-        // setX(xModel);
-        // setY(yModel);
+        // const target: HTMLElement = gRef.current;
+        // const rect = target.getBoundingClientRect();
+        // const parent: HTMLElement = ctx.ref.current;
+        // const sceneRect = parent.getBoundingClientRect();
+        // const xModel = rect.left - sceneRect.left + model.position.x;
+        // const yModel = rect.top - sceneRect.top + model.position.y;
+        console.log(`translation ${model.position.x} ${model.position.y} `);
+        // setX(model.position.x);
+        // setY(model.position.y);
+        // setLastPos(model.position);
 
 
     }, [model]);
@@ -115,7 +116,7 @@ export function DraggableSvgElement({render, onChange, model}: DraggableSvgEleme
     const gRef = useRef();
     const {x, y} = useDnd3(gRef, model, onChange);
 
-    return <g ref={gRef} transform={`translate(${x}, ${y})`} className={root}>
+    return <g ref={gRef} transform={`translate(${x}, ${y})`} className={root} preserveAspectRatio="xMinYMin meet">
         {render({height: model.dimension.height, width: model.dimension.width})}
     </g>;
 

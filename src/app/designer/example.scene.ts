@@ -12,6 +12,7 @@ export const exampleScene: SceneModel = {
                 height: 100,
                 width: 300,
             },
+            zIndex: 0,
             rotation: 0,
             type: ElementType.discord
         },
@@ -22,24 +23,27 @@ export const exampleScene: SceneModel = {
                 y: 100
             },
             dimension: {
-                height: 300,
-                width: 300,
+                height: 100,
+                width: 400,
             },
             rotation: 0,
+            zIndex: 0,
             type: ElementType.barCode
         },
         {
             id: "2",
             position: {
                 x: 0,
-                y: 355
+                y: 455
             },
             dimension: {
                 height: 100,
                 width: 100,
             },
             rotation: 0,
+            zIndex: 0,
             type: ElementType.plane
         }
     ]
 };
+
